@@ -21,6 +21,27 @@ class Tools: NSObject{
     class func RGBNumber(number : Int) -> CGFloat{
            return CGFloat.init(Double(number) / 255.0)
     }
+    
+    class func downloadImage(url: URL, completion: @escaping (_ image: UIImage?, _ error: Error? ) -> Void) {
+        let imageCache = NSCache<NSString, UIImage>()
+
+        if let cachedImage = imageCache.object(forKey: url.absoluteString as NSString) {
+            completion(cachedImage, nil)
+        } else {
+            URLSession.shared.dataTask(with: url) { data, response, error in
+                if let error = error {
+                    completion(nil, error)
+                } else if let data = data, let image = UIImage(data: data) {
+                    imageCache.setObject(image, forKey: url.absoluteString as NSString)
+                    completion(image, nil)
+                } else {
+                    completion(nil, NSError(domain:"", code:401, userInfo:[ NSLocalizedDescriptionKey: "Error getting image"]))
+                }
+            }.resume()
+        }
+    }
+    
+    
 }
 
 
@@ -55,5 +76,17 @@ extension UITableView {
             self.separatorStyle = .singleLine
         }
         
+    }
+}
+
+
+extension Date {
+    func timeAgo() -> String {
+        let formatter = DateComponentsFormatter()
+        formatter.unitsStyle = .full
+        formatter.allowedUnits = [.year, .month, .day, .hour, .minute, .second]
+        formatter.zeroFormattingBehavior = .dropAll
+        formatter.maximumUnitCount = 1
+        return String(format: formatter.string(from: self, to: Date()) ?? "", locale: .current) + " ago"
     }
 }

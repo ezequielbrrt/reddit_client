@@ -49,9 +49,10 @@ struct Children: Codable {
  */
 
 struct Post: Codable {
-    var thumbail: String?
+    var url: String?
     var author: String?
     var author_fullname: String?
     var title: String?
     var num_comments: Int?
+    var created_utc: Double?
 }

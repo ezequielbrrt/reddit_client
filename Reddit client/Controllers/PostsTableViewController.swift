@@ -12,17 +12,22 @@ import UIKit
 class PostsTableViewController: UITableViewController{
     
     private var cellId = "PostCell"
+    private var loaderCellId = "loaderCell"
     private var postListViewModel = PostListViewModel()
     private var initialEffect: Bool = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        tableView.register(PostCell.self, forCellReuseIdentifier: cellId)
 
+        registerCells()
         configureNavigationBar()
         configureRefreshControl()
         populateData()
+    }
+    
+    private func registerCells(){
+        tableView.register(PostCell.self, forCellReuseIdentifier: cellId)
+        tableView.register(LoaderCell.self, forCellReuseIdentifier: loaderCellId)
     }
     
     
@@ -38,6 +43,7 @@ class PostsTableViewController: UITableViewController{
                 }
                 if let redditData = result{
                     self?.postListViewModel.postViewModels = redditData.data.children.map(PostViewModel.init)
+                    self?.postListViewModel.addloaderObject()
                     self?.tableView.restore(showSingleLine: true)
                     self?.updateData()
 
@@ -116,12 +122,16 @@ class PostsTableViewController: UITableViewController{
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! PostCell
+        if let vm = self.postListViewModel.postViewModels[indexPath.row]{
+            let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! PostCell
+            cell.post = vm.children.post
+            return cell
+        }else{
+            let cell = tableView.dequeueReusableCell(withIdentifier: loaderCellId, for: indexPath) as! LoaderCell
+            return cell
+        }
         
-        let vm = self.postListViewModel.postViewModels[indexPath.row]
         
-        cell.post = vm.children.post
-        return cell
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -141,6 +151,7 @@ class PostsTableViewController: UITableViewController{
             tableView.deleteRows(at: [indexPath], with: .automatic)
             tableView.endUpdates()
         }
+        
     }
     
 }

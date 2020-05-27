@@ -18,6 +18,8 @@
 		936A11FC247ED5A600C52E23 /* PostCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936A11FB247ED5A600C52E23 /* PostCell.swift */; };
 		936A11FF247EE8FB00C52E23 /* Configurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936A11FE247EE8FB00C52E23 /* Configurator.swift */; };
 		936A1201247EF07B00C52E23 /* Tools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936A1200247EF07B00C52E23 /* Tools.swift */; };
+		93EFB49F247F218D000C4B91 /* notfound.png in Resources */ = {isa = PBXBuildFile; fileRef = 93EFB49E247F218D000C4B91 /* notfound.png */; };
+		93EFB4A1247F2E58000C4B91 /* LoaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93EFB4A0247F2E58000C4B91 /* LoaderCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,6 +36,8 @@
 		936A11FB247ED5A600C52E23 /* PostCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostCell.swift; sourceTree = "<group>"; };
 		936A11FE247EE8FB00C52E23 /* Configurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Configurator.swift; sourceTree = "<group>"; };
 		936A1200247EF07B00C52E23 /* Tools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tools.swift; sourceTree = "<group>"; };
+		93EFB49E247F218D000C4B91 /* notfound.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = notfound.png; sourceTree = "<group>"; };
+		93EFB4A0247F2E58000C4B91 /* LoaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoaderCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,6 +72,7 @@
 			children = (
 				936A11DA247EC87300C52E23 /* AppDelegate.swift */,
 				936A11DC247EC87300C52E23 /* SceneDelegate.swift */,
+				93EFB49D247F217D000C4B91 /* Resources */,
 				936A11FD247EE8EA00C52E23 /* Configurator */,
 				936A11FA247ED59000C52E23 /* CustomsCells */,
 				936A11EE247ECBB900C52E23 /* Controllers */,
@@ -118,6 +123,7 @@
 			isa = PBXGroup;
 			children = (
 				936A11FB247ED5A600C52E23 /* PostCell.swift */,
+				93EFB4A0247F2E58000C4B91 /* LoaderCell.swift */,
 			);
 			path = CustomsCells;
 			sourceTree = "<group>";
@@ -136,6 +142,14 @@
 				936A1200247EF07B00C52E23 /* Tools.swift */,
 			);
 			path = Tools;
+			sourceTree = "<group>";
+		};
+		93EFB49D247F217D000C4B91 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				93EFB49E247F218D000C4B91 /* notfound.png */,
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -197,6 +211,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				936A11E7247EC87500C52E23 /* LaunchScreen.storyboard in Resources */,
+				93EFB49F247F218D000C4B91 /* notfound.png in Resources */,
 				936A11E4247EC87500C52E23 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -216,6 +231,7 @@
 				936A11F9247ED3D100C52E23 /* Post.swift in Sources */,
 				936A1201247EF07B00C52E23 /* Tools.swift in Sources */,
 				936A11F7247ED3AD00C52E23 /* WebService.swift in Sources */,
+				93EFB4A1247F2E58000C4B91 /* LoaderCell.swift in Sources */,
 				936A11F0247ECBFF00C52E23 /* PostsTableViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
