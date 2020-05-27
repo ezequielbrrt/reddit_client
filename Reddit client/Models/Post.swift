@@ -19,8 +19,9 @@ struct RedditData: Codable{
 }
 
 struct RedditPost: Codable {
-    let kind: String
-    let children: Children
+    let modhash: String
+    let dist: Int
+    let children: [Children]
 }
 
 struct Children: Codable {

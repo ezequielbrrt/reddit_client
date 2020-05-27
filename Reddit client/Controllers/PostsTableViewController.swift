@@ -20,7 +20,27 @@ class PostsTableViewController: UITableViewController{
 
         configureNavigationBar()
         configureRefreshControl()
+        
+        populateData()
     }
+    
+    
+    private func populateData(){
+        let postURL = URL(string:AppConfigurator.APIUrl)!
+        
+        let postsResource = ResourceW<RedditData>(url: postURL){ data in
+            let redditData = try? JSONDecoder().decode(RedditData.self, from: data)
+            return redditData
+            
+        }
+        
+        WebService().load(resource: postsResource){[weak self] result in
+            if let redditData = result{
+                print(redditData)
+            }
+        }
+    }
+    
     
     private func configureNavigationBar(){
         self.view.backgroundColor = .white
