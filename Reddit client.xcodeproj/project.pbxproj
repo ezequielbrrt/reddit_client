@@ -11,10 +11,11 @@
 		936A11DD247EC87300C52E23 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936A11DC247EC87300C52E23 /* SceneDelegate.swift */; };
 		936A11E4247EC87500C52E23 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 936A11E3247EC87500C52E23 /* Assets.xcassets */; };
 		936A11E7247EC87500C52E23 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 936A11E5247EC87500C52E23 /* LaunchScreen.storyboard */; };
-		936A11F0247ECBFF00C52E23 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936A11EF247ECBFF00C52E23 /* MainViewController.swift */; };
+		936A11F0247ECBFF00C52E23 /* PostsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936A11EF247ECBFF00C52E23 /* PostsTableViewController.swift */; };
 		936A11F3247ED36100C52E23 /* PostListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936A11F2247ED36100C52E23 /* PostListViewModel.swift */; };
 		936A11F7247ED3AD00C52E23 /* WebService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936A11F6247ED3AD00C52E23 /* WebService.swift */; };
 		936A11F9247ED3D100C52E23 /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936A11F8247ED3D100C52E23 /* Post.swift */; };
+		936A11FC247ED5A600C52E23 /* PostCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936A11FB247ED5A600C52E23 /* PostCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,10 +25,11 @@
 		936A11E3247EC87500C52E23 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		936A11E6247EC87500C52E23 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		936A11E8247EC87500C52E23 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		936A11EF247ECBFF00C52E23 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
+		936A11EF247ECBFF00C52E23 /* PostsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostsTableViewController.swift; sourceTree = "<group>"; };
 		936A11F2247ED36100C52E23 /* PostListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostListViewModel.swift; sourceTree = "<group>"; };
 		936A11F6247ED3AD00C52E23 /* WebService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebService.swift; sourceTree = "<group>"; };
 		936A11F8247ED3D100C52E23 /* Post.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
+		936A11FB247ED5A600C52E23 /* PostCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,6 +64,7 @@
 			children = (
 				936A11DA247EC87300C52E23 /* AppDelegate.swift */,
 				936A11DC247EC87300C52E23 /* SceneDelegate.swift */,
+				936A11FA247ED59000C52E23 /* CustomsCells */,
 				936A11EE247ECBB900C52E23 /* Controllers */,
 				936A11F1247ED32200C52E23 /* ViewModels */,
 				936A11F5247ED39A00C52E23 /* Models */,
@@ -76,7 +79,7 @@
 		936A11EE247ECBB900C52E23 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				936A11EF247ECBFF00C52E23 /* MainViewController.swift */,
+				936A11EF247ECBFF00C52E23 /* PostsTableViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -103,6 +106,14 @@
 				936A11F8247ED3D100C52E23 /* Post.swift */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		936A11FA247ED59000C52E23 /* CustomsCells */ = {
+			isa = PBXGroup;
+			children = (
+				936A11FB247ED5A600C52E23 /* PostCell.swift */,
+			);
+			path = CustomsCells;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -175,12 +186,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				936A11FC247ED5A600C52E23 /* PostCell.swift in Sources */,
 				936A11F3247ED36100C52E23 /* PostListViewModel.swift in Sources */,
 				936A11DB247EC87300C52E23 /* AppDelegate.swift in Sources */,
 				936A11DD247EC87300C52E23 /* SceneDelegate.swift in Sources */,
 				936A11F9247ED3D100C52E23 /* Post.swift in Sources */,
 				936A11F7247ED3AD00C52E23 /* WebService.swift in Sources */,
-				936A11F0247ECBFF00C52E23 /* MainViewController.swift in Sources */,
+				936A11F0247ECBFF00C52E23 /* PostsTableViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
