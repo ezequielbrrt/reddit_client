@@ -26,8 +26,10 @@ class PostsTableViewController: UITableViewController{
     }
     
     
-    private func populateData(){
-        self.tableView.showLoader()
+    private func populateData(showLoader: Bool = true){
+        if showLoader{
+            self.tableView.showLoader()
+        }
         
         DispatchQueue.main.async {
             WebService().load(resource: self.postListViewModel.postsResource){[weak self] result in
@@ -80,6 +82,12 @@ class PostsTableViewController: UITableViewController{
         self.view.backgroundColor = .white
         self.navigationItem.title = "Reddit posts"
         self.navigationController?.navigationBar.prefersLargeTitles = true
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Delete All", style: .plain, target: self, action: #selector(deleteAll))
+    }
+    
+    @objc private func deleteAll(){
+        self.postListViewModel.restorePosts()
+        self.updateData()
     }
     
     private func configureRefreshControl(){
@@ -93,7 +101,7 @@ class PostsTableViewController: UITableViewController{
     }
         
     @objc func refreshPostData(_ sender: UIRefreshControl){
-        populateData()
+        populateData(showLoader: false)
     }
     
     //MARK: TABLEVIEW METHODS
@@ -120,5 +128,19 @@ class PostsTableViewController: UITableViewController{
         return 100
     }
     
+    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+    
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        
+        if editingStyle == .delete{
+            self.postListViewModel.postViewModels.remove(at: indexPath.row)
+            
+            tableView.beginUpdates()
+            tableView.deleteRows(at: [indexPath], with: .automatic)
+            tableView.endUpdates()
+        }
+    }
     
 }
