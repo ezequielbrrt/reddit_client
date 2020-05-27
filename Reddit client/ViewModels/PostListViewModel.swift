@@ -9,5 +9,10 @@
 import Foundation
 
 struct PostListViewModel{
-    
+    private var postViewModels = [PostViewModel]()
+}
+
+
+struct PostViewModel {
+    var post: Post
 }

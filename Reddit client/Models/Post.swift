@@ -6,4 +6,51 @@
 //  Copyright © 2020 Ezequiel Barreto. All rights reserved.
 //
 
+
+
+
 import Foundation
+
+
+struct RedditData: Codable{
+    var kind: String
+    var data: RedditPost
+    
+}
+
+struct RedditPost: Codable {
+    let kind: String
+    let children: Children
+}
+
+struct Children: Codable {
+    var kind: String?
+    var post: Post
+    
+    init(from decoder: Decoder) throws{
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        post = try container.decode(Post.self, forKey: .post)
+    }
+    
+    private enum CodingKeys: String, CodingKey{
+        case post = "data"
+    }
+}
+
+/*
+ - Title (at its full length, so take this into account when sizing your cells)
+ - Author
+ - entry date, following a format like “x hours ago”
+ - A thumbnail for those who have a picture.
+ - Number of comments
+ - Unread status
+ 
+ */
+
+struct Post: Codable {
+    var thumbail: String?
+    var author: String?
+    var author_fullname: String?
+    var title: String?
+    var num_comments: Int?
+}
