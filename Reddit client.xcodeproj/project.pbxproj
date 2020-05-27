@@ -16,6 +16,8 @@
 		936A11F7247ED3AD00C52E23 /* WebService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936A11F6247ED3AD00C52E23 /* WebService.swift */; };
 		936A11F9247ED3D100C52E23 /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936A11F8247ED3D100C52E23 /* Post.swift */; };
 		936A11FC247ED5A600C52E23 /* PostCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936A11FB247ED5A600C52E23 /* PostCell.swift */; };
+		936A11FF247EE8FB00C52E23 /* Configurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936A11FE247EE8FB00C52E23 /* Configurator.swift */; };
+		936A1201247EF07B00C52E23 /* Tools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936A1200247EF07B00C52E23 /* Tools.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +32,8 @@
 		936A11F6247ED3AD00C52E23 /* WebService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebService.swift; sourceTree = "<group>"; };
 		936A11F8247ED3D100C52E23 /* Post.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
 		936A11FB247ED5A600C52E23 /* PostCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostCell.swift; sourceTree = "<group>"; };
+		936A11FE247EE8FB00C52E23 /* Configurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Configurator.swift; sourceTree = "<group>"; };
+		936A1200247EF07B00C52E23 /* Tools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tools.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,11 +68,13 @@
 			children = (
 				936A11DA247EC87300C52E23 /* AppDelegate.swift */,
 				936A11DC247EC87300C52E23 /* SceneDelegate.swift */,
+				936A11FD247EE8EA00C52E23 /* Configurator */,
 				936A11FA247ED59000C52E23 /* CustomsCells */,
 				936A11EE247ECBB900C52E23 /* Controllers */,
 				936A11F1247ED32200C52E23 /* ViewModels */,
 				936A11F5247ED39A00C52E23 /* Models */,
 				936A11F4247ED38A00C52E23 /* Services */,
+				936A1202247EF07F00C52E23 /* Tools */,
 				936A11E3247EC87500C52E23 /* Assets.xcassets */,
 				936A11E5247EC87500C52E23 /* LaunchScreen.storyboard */,
 				936A11E8247EC87500C52E23 /* Info.plist */,
@@ -114,6 +120,22 @@
 				936A11FB247ED5A600C52E23 /* PostCell.swift */,
 			);
 			path = CustomsCells;
+			sourceTree = "<group>";
+		};
+		936A11FD247EE8EA00C52E23 /* Configurator */ = {
+			isa = PBXGroup;
+			children = (
+				936A11FE247EE8FB00C52E23 /* Configurator.swift */,
+			);
+			path = Configurator;
+			sourceTree = "<group>";
+		};
+		936A1202247EF07F00C52E23 /* Tools */ = {
+			isa = PBXGroup;
+			children = (
+				936A1200247EF07B00C52E23 /* Tools.swift */,
+			);
+			path = Tools;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -186,11 +208,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				936A11FF247EE8FB00C52E23 /* Configurator.swift in Sources */,
 				936A11FC247ED5A600C52E23 /* PostCell.swift in Sources */,
 				936A11F3247ED36100C52E23 /* PostListViewModel.swift in Sources */,
 				936A11DB247EC87300C52E23 /* AppDelegate.swift in Sources */,
 				936A11DD247EC87300C52E23 /* SceneDelegate.swift in Sources */,
 				936A11F9247ED3D100C52E23 /* Post.swift in Sources */,
+				936A1201247EF07B00C52E23 /* Tools.swift in Sources */,
 				936A11F7247ED3AD00C52E23 /* WebService.swift in Sources */,
 				936A11F0247ECBFF00C52E23 /* PostsTableViewController.swift in Sources */,
 			);

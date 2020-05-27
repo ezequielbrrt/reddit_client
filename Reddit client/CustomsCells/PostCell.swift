@@ -27,7 +27,12 @@ class PostCell: UITableViewCell{
         return label
     }()
     
-
+    var post: Post? {
+        didSet{
+            titleLabel.text = post?.title
+        }
+    }
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         addSubview(postImageView)

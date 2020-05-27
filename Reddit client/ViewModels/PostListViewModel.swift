@@ -9,10 +9,21 @@
 import Foundation
 
 struct PostListViewModel{
-    private var postViewModels = [PostViewModel]()
+    
+    var postViewModels = [PostViewModel]()
+
+    
+    let postsResource = ResourceW<RedditData>(url: URL(string:AppConfigurator.APIUrl)!){ data in
+        let redditData = try? JSONDecoder().decode(RedditData.self, from: data)
+        return redditData
+    }
+    
+    mutating func restorePosts(){
+        self.postViewModels = [PostViewModel]()
+    }
 }
 
 
 struct PostViewModel {
-    var post: Post
+    var children: Children
 }
