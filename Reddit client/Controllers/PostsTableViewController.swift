@@ -34,7 +34,7 @@ class PostsTableViewController: UITableViewController{
     }
     
     
-    private func populateData(showLoader: Bool = true){
+    private func populateData(showLoader: Bool = true, appendData: Bool = false){
         if showLoader{
             self.tableView.showLoader()
         }
@@ -46,9 +46,14 @@ class PostsTableViewController: UITableViewController{
                     self?.refreshControl?.endRefreshing()
                 }
                 if let redditData = result{
-                    self?.postListViewModel.postViewModels = redditData.data.children.map(PostViewModel.init)
+                    if appendData{
+                        self?.postListViewModel.postViewModels.append(contentsOf: redditData.data.children.map(PostViewModel.init))
+                    }else{
+                        self?.postListViewModel.postViewModels = redditData.data.children.map(PostViewModel.init)
+                    }
+                    
                     self?.postListViewModel.addloaderObject()
-                    self?.key = redditData.data.after
+                    self?.key = redditData.data.after!
                     self?.tableView.restore(showSingleLine: true)
                     self?.updateData()
                     self?.isUpdating = false
@@ -131,10 +136,13 @@ class PostsTableViewController: UITableViewController{
         if let vm = self.postListViewModel.postViewModels[indexPath.row]{
             let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! PostCell
             cell.postTableView = self
+            cell.postImageView.image = nil
             cell.post = vm.children.post
             return cell
         }else{
             let cell = tableView.dequeueReusableCell(withIdentifier: loaderCellId, for: indexPath) as! LoaderCell
+            self.postListViewModel.removeLastPost()
+            self.populateData(showLoader: false, appendData: true)
             return cell
         }
         
@@ -168,9 +176,11 @@ class PostsTableViewController: UITableViewController{
         
         
         if distanceFromBottom < height {
-            if !self.isUpdating{
-                
-            }
+            /*if !self.isUpdating{
+                self.isEditing = true
+                self.postListViewModel.removeLastPost()
+                self.populateData(showLoader: false)
+            }*/
             /*if !self.nextPage.isEmpty{
                 if !self.isUpdating{
                     self.isUpdating = true

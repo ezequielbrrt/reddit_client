@@ -22,8 +22,8 @@ struct RedditPost: Codable {
     let modhash: String
     let dist: Int
     let children: [Children]
-    let after: String
-    let before: String
+    let after: String?
+    let before: String?
 }
 
 struct Children: Codable {

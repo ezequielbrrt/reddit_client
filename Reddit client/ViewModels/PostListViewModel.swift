@@ -36,6 +36,10 @@ struct PostListViewModel{
     mutating func addloaderObject(){
         self.postViewModels.append(nil)
     }
+    
+    mutating func removeLastPost(){
+        self.postViewModels.removeLast()
+    }
 }
 
 
