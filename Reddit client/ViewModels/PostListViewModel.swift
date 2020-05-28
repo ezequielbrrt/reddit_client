@@ -17,6 +17,18 @@ struct PostListViewModel{
         return redditData
     }
     
+    func getPosts(key: String) -> ResourceW<RedditData>?{
+        if let url = URL(string: AppConfigurator.APIUrl + "&after=" + key){
+            return ResourceW<RedditData>(url: url){ data in
+                let redditData = try? JSONDecoder().decode(RedditData.self, from: data)
+                return redditData
+            }
+        }
+        return nil
+
+    }
+    
+
     mutating func restorePosts(){
         self.postViewModels = [PostViewModel]()
     }

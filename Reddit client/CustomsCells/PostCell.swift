@@ -11,6 +11,8 @@ import UIKit
 
 class PostCell: UITableViewCell{
     
+    var postTableView : PostsTableViewController?
+
     var postImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.layer.cornerRadius = 10
@@ -149,12 +151,23 @@ class PostCell: UITableViewCell{
         addSubview(postImageView)
         addSubview(infoStackView)
         
+        
+        postImageTapHandler()
         configCommentsStackView()
         configStatusStackView()
         configStackView()
         configBottomStackView()
         setConstraintsImageView()
         setConstraintStackView()
+    }
+    
+    private func postImageTapHandler(){
+        postImageView.isUserInteractionEnabled = true
+        postImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action:#selector(animate)))
+    }
+    
+    @objc func animate(){
+        postTableView?.animateImageView(imageView: postImageView)
     }
     
     private func configStatusStackView(){

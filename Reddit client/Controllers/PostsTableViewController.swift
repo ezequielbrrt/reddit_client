@@ -15,7 +15,10 @@ class PostsTableViewController: UITableViewController{
     private var loaderCellId = "loaderCell"
     private var postListViewModel = PostListViewModel()
     private var initialEffect: Bool = false
-
+    private var key = ""
+    var isUpdating: Bool = false
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -37,15 +40,18 @@ class PostsTableViewController: UITableViewController{
         }
         
         DispatchQueue.main.async {
-            WebService().load(resource: self.postListViewModel.postsResource){[weak self] result in
+            let postsResource = self.postListViewModel.getPosts(key: self.key)
+            WebService().load(resource: postsResource!){[weak self] result in
                 if (self?.refreshControl!.isRefreshing)!{
                     self?.refreshControl?.endRefreshing()
                 }
                 if let redditData = result{
                     self?.postListViewModel.postViewModels = redditData.data.children.map(PostViewModel.init)
                     self?.postListViewModel.addloaderObject()
+                    self?.key = redditData.data.after
                     self?.tableView.restore(showSingleLine: true)
                     self?.updateData()
+                    self?.isUpdating = false
 
                 }
             }
@@ -124,6 +130,7 @@ class PostsTableViewController: UITableViewController{
         
         if let vm = self.postListViewModel.postViewModels[indexPath.row]{
             let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! PostCell
+            cell.postTableView = self
             cell.post = vm.children.post
             return cell
         }else{
@@ -152,6 +159,113 @@ class PostsTableViewController: UITableViewController{
             tableView.endUpdates()
         }
         
+    }
+    
+    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let height = scrollView.frame.size.height
+        let contentYoffset = scrollView.contentOffset.y
+        let distanceFromBottom = scrollView.contentSize.height - contentYoffset
+        
+        
+        if distanceFromBottom < height {
+            if !self.isUpdating{
+                
+            }
+            /*if !self.nextPage.isEmpty{
+                if !self.isUpdating{
+                    self.isUpdating = true
+                    if Tools.hasInternet(){
+                        self.characterListViewModel.charactersViewModel.removeLast()
+                        self.populateCharacters(nextPage: nextPage)
+                    }else{
+                        showAlertNoWifi()
+                    }
+                    
+                }
+                
+            }*/
+        }
+        
+    }
+    
+    // MARK: Animation
+    let blackBackgroundView = UIView()
+    let viewImage = UIImageView()
+    let navBarCover = UIView()
+    let tabBarCover = UIView()
+    
+    var imageView: UIImageView?
+    
+    func animateImageView(imageView: UIImageView){
+        
+        self.imageView = imageView
+    
+        if  let startingFrame = imageView.superview?.convert(imageView.frame, to: nil){
+            
+            imageView.alpha = 0.0
+            blackBackgroundView.frame = view.frame
+            blackBackgroundView.backgroundColor = .black
+            blackBackgroundView.alpha = 0.0
+            view.addSubview(blackBackgroundView)
+            
+            navBarCover.frame = CGRectMake(0, 0, 1000, 147)
+            navBarCover.backgroundColor = .black
+            navBarCover.alpha = 0.0
+            
+            if let keyWindow = UIApplication.shared.keyWindow{
+                keyWindow.addSubview(navBarCover)
+                
+                tabBarCover.frame = CGRectMake(0, keyWindow.frame.height - 50, 1000, 50)
+                tabBarCover.backgroundColor = .black
+                tabBarCover.alpha = 0.0
+                keyWindow.addSubview(tabBarCover)
+            }
+            
+            viewImage.backgroundColor = .red
+            viewImage.frame = startingFrame
+            viewImage.isUserInteractionEnabled = true
+            viewImage.image = imageView.image
+            viewImage.contentMode = .scaleToFill
+            viewImage.clipsToBounds = true
+            view.addSubview(viewImage)
+            
+            navBarCover.addGestureRecognizer(UITapGestureRecognizer(target: self, action:#selector(zoomOut)))
+            blackBackgroundView.addGestureRecognizer(UITapGestureRecognizer(target: self, action:#selector(zoomOut)))
+            viewImage.addGestureRecognizer(UISwipeGestureRecognizer(target: self, action:#selector(zoomOut)))
+
+            UIView.animate(withDuration: 0.75, animations: {
+                let height = (self.view.frame.width / startingFrame.width) * startingFrame.height
+                let y = self.view.frame.height / 2 - height / 2
+                self.viewImage.frame = self.CGRectMake(0, y, self.view.frame.width, height)
+                self.blackBackgroundView.alpha = 1.0
+                self.navBarCover.alpha = 1.0
+                self.tabBarCover.alpha = 1.0
+            })
+        }
+        
+    }
+    
+    @objc func zoomOut(){
+        if  let startingFrame = imageView!.superview?.convert(imageView!.frame, to: nil){
+            
+            UIView.animate(withDuration: 0.75, animations: {
+                self.viewImage.frame = startingFrame
+                self.blackBackgroundView.alpha = 0.0
+                self.navBarCover.alpha = 0.0
+                self.tabBarCover.alpha = 0.0
+            }, completion: { (true) in
+                self.viewImage.removeFromSuperview()
+                self.blackBackgroundView.removeFromSuperview()
+                self.navBarCover.removeFromSuperview()
+                self.tabBarCover.removeFromSuperview()
+                self.imageView?.alpha = 1.0
+            })
+        }
+    }
+    
+    
+    func CGRectMake(_ x: CGFloat, _ y: CGFloat, _ width: CGFloat, _ height: CGFloat) -> CGRect {
+        return CGRect(x: x, y: y, width: width, height: height)
     }
     
 }
