@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-class PostsTableViewController: UITableViewController{
+class PostsTableViewController: UITableViewController, OpenImageURLDelegate{
     
     private var cellId = "PostCell"
     private var loaderCellId = "loaderCell"
@@ -52,9 +52,10 @@ class PostsTableViewController: UITableViewController{
                         self?.postListViewModel.postViewModels = redditData.data.children.map(PostViewModel.init)
                     }
                     
-                    self?.postListViewModel.addloaderObject()
                     self?.key = redditData.data.after!
-                    self?.tableView.restore(showSingleLine: true)
+                    if showLoader{
+                        self?.tableView.restore(showSingleLine: true)
+                    }
                     self?.updateData()
                     self?.isUpdating = false
 
@@ -63,6 +64,7 @@ class PostsTableViewController: UITableViewController{
         }
         
     }
+    
     
     
     private func updateData(){
@@ -96,6 +98,7 @@ class PostsTableViewController: UITableViewController{
 
     
     private func configureNavigationBar(){
+        self.navigationController?.navigationBar.sizeToFit()
         self.view.backgroundColor = .white
         self.navigationItem.title = "Reddit posts"
         self.navigationController?.navigationBar.prefersLargeTitles = true
@@ -118,10 +121,37 @@ class PostsTableViewController: UITableViewController{
     }
         
     @objc func refreshPostData(_ sender: UIRefreshControl){
+        key = ""
         populateData(showLoader: false)
     }
     
     //MARK: TABLEVIEW METHODS
+    func openImage(cell: PostCell) {
+        if let post = cell.post, let url = post.url{
+            UIApplication.shared.open(URL(string: url)!)
+        }
+    }
+    
+    func downloadImage(cell: PostCell) {
+        Tools.feedback()
+        let alert = UIAlertController(title: "Save image ?", message: nil, preferredStyle: .actionSheet)
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+
+        alert.addAction(UIAlertAction(title: "Save", style: .default, handler: { action in
+            
+            if let url = URL(string: cell.post!.url!),
+                let data = try? Data(contentsOf: url),
+                let image = UIImage(data: data) {
+                UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
+                self.showToast(message: "Image saved", seconds: 2.0)
+            }else{
+                self.showToast(message: "Image doesn't exists", seconds: 2.0)
+            }
+            
+        }))
+
+        self.present(alert, animated: true)
+    }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
@@ -132,25 +162,29 @@ class PostsTableViewController: UITableViewController{
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! PostCell
         
-        if let vm = self.postListViewModel.postViewModels[indexPath.row]{
-            let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! PostCell
-            cell.postTableView = self
-            cell.postImageView.image = nil
-            cell.post = vm.children.post
-            return cell
-        }else{
-            let cell = tableView.dequeueReusableCell(withIdentifier: loaderCellId, for: indexPath) as! LoaderCell
-            self.postListViewModel.removeLastPost()
-            self.populateData(showLoader: false, appendData: true)
-            return cell
+        let vm = self.postListViewModel.postViewModels[indexPath.row]
+        cell.delegate = self
+        cell.postTableView = self
+        cell.postImageView.image = nil
+        cell.post = vm!.children.post
+        return cell
+        
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard let cell = tableView.cellForRow(at: indexPath) as? PostCell else{
+            return
         }
-        
+        cell.statusLabel.text = "Read"
+        cell.statusLabel.textColor = .green
+        self.postListViewModel.postViewModels[indexPath.row]!.children.post.status = true
         
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 100
+        return 150
     }
     
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
@@ -176,106 +210,15 @@ class PostsTableViewController: UITableViewController{
         
         
         if distanceFromBottom < height {
-            /*if !self.isUpdating{
-                self.isEditing = true
-                self.postListViewModel.removeLastPost()
-                self.populateData(showLoader: false)
-            }*/
-            /*if !self.nextPage.isEmpty{
-                if !self.isUpdating{
-                    self.isUpdating = true
-                    if Tools.hasInternet(){
-                        self.characterListViewModel.charactersViewModel.removeLast()
-                        self.populateCharacters(nextPage: nextPage)
-                    }else{
-                        showAlertNoWifi()
-                    }
-                    
-                }
-                
-            }*/
-        }
-        
-    }
-    
-    // MARK: Animation
-    let blackBackgroundView = UIView()
-    let viewImage = UIImageView()
-    let navBarCover = UIView()
-    let tabBarCover = UIView()
-    
-    var imageView: UIImageView?
-    
-    func animateImageView(imageView: UIImageView){
-        
-        self.imageView = imageView
-    
-        if  let startingFrame = imageView.superview?.convert(imageView.frame, to: nil){
             
-            imageView.alpha = 0.0
-            blackBackgroundView.frame = view.frame
-            blackBackgroundView.backgroundColor = .black
-            blackBackgroundView.alpha = 0.0
-            view.addSubview(blackBackgroundView)
-            
-            navBarCover.frame = CGRectMake(0, 0, 1000, 147)
-            navBarCover.backgroundColor = .black
-            navBarCover.alpha = 0.0
-            
-            if let keyWindow = UIApplication.shared.keyWindow{
-                keyWindow.addSubview(navBarCover)
-                
-                tabBarCover.frame = CGRectMake(0, keyWindow.frame.height - 50, 1000, 50)
-                tabBarCover.backgroundColor = .black
-                tabBarCover.alpha = 0.0
-                keyWindow.addSubview(tabBarCover)
+            if !self.isUpdating{
+                self.isUpdating = true
+                self.populateData(showLoader: false, appendData: true)
             }
+                
             
-            viewImage.backgroundColor = .red
-            viewImage.frame = startingFrame
-            viewImage.isUserInteractionEnabled = true
-            viewImage.image = imageView.image
-            viewImage.contentMode = .scaleToFill
-            viewImage.clipsToBounds = true
-            view.addSubview(viewImage)
-            
-            navBarCover.addGestureRecognizer(UITapGestureRecognizer(target: self, action:#selector(zoomOut)))
-            blackBackgroundView.addGestureRecognizer(UITapGestureRecognizer(target: self, action:#selector(zoomOut)))
-            viewImage.addGestureRecognizer(UISwipeGestureRecognizer(target: self, action:#selector(zoomOut)))
-
-            UIView.animate(withDuration: 0.75, animations: {
-                let height = (self.view.frame.width / startingFrame.width) * startingFrame.height
-                let y = self.view.frame.height / 2 - height / 2
-                self.viewImage.frame = self.CGRectMake(0, y, self.view.frame.width, height)
-                self.blackBackgroundView.alpha = 1.0
-                self.navBarCover.alpha = 1.0
-                self.tabBarCover.alpha = 1.0
-            })
         }
         
-    }
-    
-    @objc func zoomOut(){
-        if  let startingFrame = imageView!.superview?.convert(imageView!.frame, to: nil){
-            
-            UIView.animate(withDuration: 0.75, animations: {
-                self.viewImage.frame = startingFrame
-                self.blackBackgroundView.alpha = 0.0
-                self.navBarCover.alpha = 0.0
-                self.tabBarCover.alpha = 0.0
-            }, completion: { (true) in
-                self.viewImage.removeFromSuperview()
-                self.blackBackgroundView.removeFromSuperview()
-                self.navBarCover.removeFromSuperview()
-                self.tabBarCover.removeFromSuperview()
-                self.imageView?.alpha = 1.0
-            })
-        }
-    }
-    
-    
-    func CGRectMake(_ x: CGFloat, _ y: CGFloat, _ width: CGFloat, _ height: CGFloat) -> CGRect {
-        return CGRect(x: x, y: y, width: width, height: height)
     }
     
 }

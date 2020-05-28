@@ -9,9 +9,15 @@
 import Foundation
 import UIKit
 
+protocol OpenImageURLDelegate: class {
+    func openImage(cell: PostCell)
+    func downloadImage(cell: PostCell)
+}
+
 class PostCell: UITableViewCell{
     
     var postTableView : PostsTableViewController?
+    weak var delegate: OpenImageURLDelegate?
 
     var postImageView: UIImageView = {
         let imageView = UIImageView()
@@ -123,9 +129,22 @@ class PostCell: UITableViewCell{
                 authorLabel.text = "by: " + author
             }
             commentsLabel.text = post?.num_comments?.description
-            statusLabel.text = "Unread"
-        
-            if let post = post, let image = post.url{
+
+            
+            if let status = post?.status{
+                if status{
+                    statusLabel.text = "Read"
+                    statusLabel.textColor = .green
+                }else{
+                    statusLabel.text = "Unread"
+                    statusLabel.textColor = .orange
+                }
+            }else{
+                statusLabel.text = "Unread"
+                statusLabel.textColor = .orange
+            }
+            
+            if let post = post, let image = post.thumbnail{
                 Tools.downloadImage(url: URL(string: image)!) { (image, error) in
                     DispatchQueue.main.async {
                         if error == nil {
@@ -146,11 +165,16 @@ class PostCell: UITableViewCell{
         }
     }
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        self.delegate = nil
+    }
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         addSubview(postImageView)
         addSubview(infoStackView)
-        
+        self.selectionStyle = .none
         
         postImageTapHandler()
         configCommentsStackView()
@@ -163,11 +187,16 @@ class PostCell: UITableViewCell{
     
     private func postImageTapHandler(){
         postImageView.isUserInteractionEnabled = true
-        postImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action:#selector(animate)))
+        postImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action:#selector(openImage)))
+        postImageView.addGestureRecognizer(UILongPressGestureRecognizer(target: self, action:#selector(downloadImage)))
     }
     
-    @objc func animate(){
-        postTableView?.animateImageView(imageView: postImageView)
+    @objc func openImage(){
+        self.delegate?.openImage(cell: self)
+    }
+    
+    @objc func downloadImage(){
+        self.delegate?.downloadImage(cell: self)
     }
     
     private func configStatusStackView(){
@@ -200,34 +229,12 @@ class PostCell: UITableViewCell{
         infoStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -12).isActive = true
     }
     
-    private func setConstraintAuthorLabel(){
-        
-    }
-    
-    private func setConstraintEntryLabel(){
-        entryLalbel.translatesAutoresizingMaskIntoConstraints = false
-        entryLalbel.leadingAnchor.constraint(equalTo: postImageView.trailingAnchor, constant: 20).isActive = true
-        entryLalbel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -12).isActive = true
-        entryLalbel.topAnchor.constraint(equalTo: topAnchor).isActive = true
-        entryLalbel.heightAnchor.constraint(equalToConstant: 15).isActive = true
-
-    }
-    
     private func setConstraintsImageView(){
         postImageView.translatesAutoresizingMaskIntoConstraints = false
         postImageView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
         postImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 12).isActive = true
         postImageView.heightAnchor.constraint(equalToConstant: 80).isActive = true
         postImageView.widthAnchor.constraint(equalToConstant: 80).isActive = true
-    }
-    
-    private func setConstraintsTitleLabel(){
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        titleLabel.topAnchor.constraint(equalTo: entryLalbel.bottomAnchor).isActive = true
-        titleLabel.leadingAnchor.constraint(equalTo: postImageView.trailingAnchor, constant: 20).isActive = true
-        titleLabel.heightAnchor.constraint(equalToConstant: 15).isActive = true
-        titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -12).isActive = true
-        
     }
     
     required init?(coder: NSCoder) {

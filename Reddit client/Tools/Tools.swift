@@ -10,7 +10,12 @@ import Foundation
 import UIKit
 
 class Tools: NSObject{
-
+    
+    class func feedback(){
+        let generator = UIImpactFeedbackGenerator(style:.light)
+        generator.impactOccurred()
+    }
+    
     class func RGB(r : Int, g : Int, b : Int) -> UIColor{
         return UIColor.init(red: RGBNumber(number: r),
                             green: RGBNumber(number: g),
@@ -24,7 +29,7 @@ class Tools: NSObject{
     
     class func downloadImage(url: URL, completion: @escaping (_ image: UIImage?, _ error: Error? ) -> Void) {
         let imageCache = NSCache<NSString, UIImage>()
-
+        
         if let cachedImage = imageCache.object(forKey: url.absoluteString as NSString) {
             completion(cachedImage, nil)
         } else {
@@ -89,4 +94,18 @@ extension Date {
         formatter.maximumUnitCount = 1
         return String(format: formatter.string(from: self, to: Date()) ?? "", locale: .current) + " ago"
     }
+}
+
+extension UITableViewController {
+  func showToast(message: String, seconds: Double) {
+    let alert = UIAlertController(title: nil, message: message,
+      preferredStyle: .alert)
+    alert.view.backgroundColor = UIColor.white
+    alert.view.alpha = 0.6
+    alert.view.layer.cornerRadius = 15
+    present(alert, animated: true)
+    DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + seconds) {
+        alert.dismiss(animated: true)
+    }
+  }
 }

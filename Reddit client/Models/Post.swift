@@ -51,10 +51,12 @@ struct Children: Codable {
  */
 
 struct Post: Codable {
-    var url: String?
+    var thumbnail: String?
     var author: String?
     var author_fullname: String?
     var title: String?
     var num_comments: Int?
     var created_utc: Double?
+    var status: Bool? = false
+    var url: String?
 }
