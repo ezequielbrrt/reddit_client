@@ -49,7 +49,7 @@ class PostCell: UITableViewCell{
         label.numberOfLines = 0
         label.textColor = .black
         label.adjustsFontSizeToFitWidth = true
-        label.font = label.font.withSize(10)
+        label.font = label.font.withSize(12)
         label.textColor = .gray
         return label
     }()
